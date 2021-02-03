@@ -43,6 +43,7 @@ class Graph {
       }
 
       while(not_found.size() > 0) {
+        conn_comps.clear();
         stack.push(*not_found.begin());
 
         while (!stack.empty()) {
@@ -63,6 +64,62 @@ class Graph {
         result.push_back(conn_comps);
       }
       return result;
+    }
+
+    vector<T*> one_cycle() {
+      unordered_map<T*, bool> visited;
+      unordered_set<T *> not_found;
+      stack<T*> stack;
+      vector<T*> cur_path; // track potential cycle
+      vector<T*> cycle; 
+      T* s;
+      T* last;
+
+      for (auto const& pair: adj_list) {
+          visited[pair.first] = false;
+          not_found.insert(pair.first);
+      }
+
+      while(not_found.size() > 0) {
+        stack.push(*not_found.begin());
+        cur_path.clear();
+
+        while (!stack.empty()) {
+          s = stack.top();
+          stack.pop();
+
+          if (!visited[s]) {
+              cur_path.push_back(s);
+              visited[s] = true;
+              not_found.erase(s);
+          }
+
+          bool next = false;
+          bool start_c = false;
+          for (const auto& i: adj_list[s]) {
+            if (visited[i]) {
+              if(i != last) {
+                for(const auto& j: cur_path) {
+                  if(j == i)
+                    start_c = true;
+                  if(start_c)
+                    cycle.push_back(j);
+                }
+                cycle.push_back(i);
+                return cycle;
+              }
+            }
+            else {
+              stack.push(i);
+              next = true;
+            }
+          }
+          if (!next)
+            cur_path.pop_back();
+          last = s;
+        }
+      }
+      return vector<T*>();
     }
 
     // DFS for reference
@@ -104,6 +161,7 @@ int main() {
   vector<int> v = {1,2,3,4,5,6,7,8,9,10};
   g.add_edge(v[0], v[1]);
   g.add_edge(v[0], v[5]);
+  g.add_edge(v[0], v[2]);
   g.add_edge(v[1], v[9]);
   g.add_edge(v[5], v[2]);
   g.add_edge(v[3], v[8]);
@@ -118,5 +176,14 @@ int main() {
       cout << *comps[i][j] << " ";
     cout << endl;
   }
+
+  cout << endl;
+
+  vector<int*> cycle = g.one_cycle();
+  for(int i=0; i<cycle.size(); i++)
+    cout << *cycle[i] << " ";
+  
+  cout << endl;
+
   return 0;
 }
