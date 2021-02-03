@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 using namespace std;
 
 
@@ -12,16 +13,16 @@ class Graph {
     }
 
     void add_edge(T &n1, T &n2) {
-      adjList[&n1].push_back(&n2);
-      adjList[&n2].push_back(&n1);
+      adjList[&n1].insert(&n2);
+      adjList[&n2].insert(&n1);
     }
 
     void print_graph()
     {
       for (auto const& pair: adjList) {
           cout << *pair.first << ": ";
-          for(int i=0; i < pair.second.size(); i++) {
-            cout << *pair.second.at(i) << " ";
+          for (const auto& elem: pair.second) {
+            cout << *elem << " ";
           }
           cout << endl;
       }
@@ -35,7 +36,7 @@ class Graph {
     // }
 
   private:
-    unordered_map<T*, vector<T *>> adjList;
+    unordered_map<T*, unordered_set<T *>> adjList;
 };
 
 
@@ -46,6 +47,7 @@ int main() {
   g.add_edge(v[0], v[5]);
   g.add_edge(v[1], v[9]);
   g.add_edge(v[5], v[2]);
+  g.add_edge(v[0], v[7]);
   g.print_graph();
   return 0;
 }
