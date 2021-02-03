@@ -15,10 +15,14 @@ struct Node {
  
 class Graph {
   public:
-    int numNodes;
+    // int numNodes; Redundant variable -- simply use nodes.size();
+    // Works as long as the Graph constructor has been called. 
     vector<Node *> nodes;
     Graph() {
-      numNodes=0;
+    }
+
+    const int Graph::numNodes() {
+      return nodes.size();
     }
 };
 
