@@ -154,10 +154,9 @@ class Graph {
         path.push_back(cur);
         while(true) {
           path.push_back(last_visited[cur]);
-          // cout << *cur << endl;
-          cur = last_visited[cur];
           if (last_visited[cur] == &src)
             return path;
+          cur = last_visited[cur];
         }
       }
       return vector<T*>();
@@ -176,7 +175,7 @@ int main() {
   g.add_edge(v[0], v[2]);
   g.add_edge(v[1], v[9]);
   g.add_edge(v[5], v[2]);
-  g.add_edge(v[3], v[8]);
+  g.add_edge(v[3], v[9]);
   g.add_edge(v[0], v[7]);
   g.print_graph();
   
@@ -195,7 +194,7 @@ int main() {
     cout << *cycle[i] << " ";
   cout << endl << endl;
 
-  vector<int*> shp = g.shortest_path(v[0], v[8]);
+  vector<int*> shp = g.shortest_path(v[0], v[3]);
   for(int i=0; i<shp.size(); i++)
     cout << *shp[i] << " ";
 
