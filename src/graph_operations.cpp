@@ -1,14 +1,6 @@
 #include "graph_operations.h"
 
-#include <iostream>
-#include <vector>
-#include <list>
-#include <unordered_map>
-#include <unordered_set>
-#include <stack>
-
 using namespace std;
-
 
 template<typename T>
 int Graph<T>::size() {
@@ -16,9 +8,14 @@ int Graph<T>::size() {
 }
 
 template<typename T>
-void Graph<T>::add_edge(T &n1, T &n2) {
-  adj_list[&n1].insert(&n2);
-  adj_list[&n2].insert(&n1);
+void Graph<T>::load_nodes(vector<T> n) {
+  nodes = n;
+};
+
+template<typename T>
+void Graph<T>::add_edge(int ind1, int ind2) {
+  adj_list[&nodes[ind1]].insert(&nodes[ind2]);
+  adj_list[&nodes[ind2]].insert(&nodes[ind1]);
 }
 
 template<typename T>
@@ -169,36 +166,37 @@ vector<T*> Graph<T>::shortest_path(T &src, T &dest) {
 }
 
 
-int main() {
-  Graph<int> g = Graph<int>();
-  vector<int> v = {1,2,3,4,5,6,7,8,9,10};
-  g.add_edge(v[0], v[1]);
-  g.add_edge(v[0], v[5]);
-  g.add_edge(v[0], v[2]);
-  g.add_edge(v[1], v[9]);
-  g.add_edge(v[5], v[2]);
-  g.add_edge(v[3], v[9]);
-  g.add_edge(v[0], v[7]);
-  g.print_graph();
+// int main() {
+//   Graph<int> g = Graph<int>();
+//   vector<int> v = {1,2,3,4,5,6,7,8,9,10};
+//   g.load_nodes(v);
+//   g.add_edge(0, 1);
+//   g.add_edge(0, 5);
+//   g.add_edge(0, 2);
+//   g.add_edge(1, 9);
+//   g.add_edge(5, 2);
+//   g.add_edge(3, 9);
+//   g.add_edge(0, 7);
+//   g.print_graph();
   
-  cout << endl;
+//   cout << endl;
 
-  vector<vector<int*>> comps = g.connected_components();
-  for (int i = 0; i < comps.size(); i++) {
-    for (int j = 0; j < comps[i].size(); j++)
-      cout << *comps[i][j] << " ";
-    cout << endl;
-  }
-  cout << endl;
+//   vector<vector<int*>> comps = g.connected_components();
+//   for (int i = 0; i < comps.size(); i++) {
+//     for (int j = 0; j < comps[i].size(); j++)
+//       cout << *comps[i][j] << " ";
+//     cout << endl;
+//   }
+//   cout << endl;
 
-  vector<int*> cycle = g.one_cycle();
-  for(int i=0; i<cycle.size(); i++)
-    cout << *cycle[i] << " ";
-  cout << endl << endl;
+//   vector<int*> cycle = g.one_cycle();
+//   for(int i=0; i<cycle.size(); i++)
+//     cout << *cycle[i] << " ";
+//   cout << endl << endl;
 
-  vector<int*> shp = g.shortest_path(v[0], v[3]);
-  for(int i=0; i<shp.size(); i++)
-    cout << *shp[i] << " ";
+//   vector<int*> shp = g.shortest_path(v[0], v[3]);
+//   for(int i=0; i<shp.size(); i++)
+//     cout << *shp[i] << " ";
 
-  return 0;
-}
+//   return 0;
+// }

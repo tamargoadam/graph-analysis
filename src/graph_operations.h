@@ -1,12 +1,19 @@
+#ifndef GRAPH_OPS_H
+#define GRAPH_OPS_H
+
+#include <iostream>
 #include <vector>
+#include <list>
 #include <unordered_map>
 #include <unordered_set>
+#include <stack>
 
 template<typename T>
 class Graph {
   public:
     int size();
-    void add_edge(T &n1, T &n2);
+    void load_nodes(std::vector<T> n);
+    void add_edge(int ind1, int ind2);
     void print_graph();
     std::vector<std::vector<T*>> connected_components();
     std::vector<T*> one_cycle();
@@ -14,4 +21,7 @@ class Graph {
 
   private:
     std::unordered_map<T*, std::unordered_set<T *>> adj_list;
+    std::vector<T> nodes;
 };
+
+#endif
