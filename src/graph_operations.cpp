@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <list>
 #include <unordered_map>
 #include <unordered_set>
 #include <stack>
@@ -122,33 +123,44 @@ class Graph {
       return vector<T*>();
     }
 
-    // DFS for reference
-    vector<T*> dfs_util() {
-      unordered_map<T*, bool> visited;
-      stack<T*> stack;
-      vector<T*> result;
-      T* s;
+    vector<T*> shortest_path(T &src, T &dest) {
+      unordered_map<T*, T*> last_visited;
+      unordered_map<T*, int> distances;
+      list<T*> queue;
+      T* cur;
+      vector<T*> path;
 
-      for (auto const& pair: adj_list) {
-          visited[pair.first] = false;
-      }
-      stack.push((*adj_list.begin()).first);
-
-      while (!stack.empty()) {
-        s = stack.top();
-        stack.pop();
-
-        if (!visited[s]) {
-            result.push_back(s);
-            visited[s] = true;
+      for (auto const& pair: adj_list)
+          distances[pair.first] = -1;
+ 
+      distances[&src] = 0;
+      queue.push_back(&src);
+ 
+      while(!queue.empty()) {
+        cur = queue.front();
+        queue.pop_front();
+ 
+        for (auto i = adj_list[cur].begin(); i != adj_list[cur].end(); ++i) {
+          if (distances[*i] < 0 || distances[*i] > distances[cur]+1) {
+            distances[*i] = distances[cur]+1;
+            last_visited[*i] = cur;
+            queue.push_back(*i);
+          }
         }
+      }
 
-        for (const auto& i: adj_list[s]) {
-          if (!visited[i])
-            stack.push(i);
+      if (distances.find(&dest)!=distances.end()){
+        T* cur = &dest;
+        path.push_back(cur);
+        while(true) {
+          path.push_back(last_visited[cur]);
+          // cout << *cur << endl;
+          cur = last_visited[cur];
+          if (last_visited[cur] == &src)
+            return path;
         }
       }
-      return result;
+      return vector<T*>();
     }
 
   private:
@@ -176,14 +188,16 @@ int main() {
       cout << *comps[i][j] << " ";
     cout << endl;
   }
-
   cout << endl;
 
   vector<int*> cycle = g.one_cycle();
   for(int i=0; i<cycle.size(); i++)
     cout << *cycle[i] << " ";
-  
-  cout << endl;
+  cout << endl << endl;
+
+  vector<int*> shp = g.shortest_path(v[0], v[8]);
+  for(int i=0; i<shp.size(); i++)
+    cout << *shp[i] << " ";
 
   return 0;
 }
