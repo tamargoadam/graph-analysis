@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 
-Graph<int> n_cycle_graph(int n);
+Graph<int> cycle_graph(int n);
+Graph<int> complete_graph(int n);
+Graph<int> empty_graph(int n);
 
 #endif
