@@ -1,170 +1,172 @@
+#include "graph_operations.h"
+
 #include <iostream>
 #include <vector>
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
 #include <stack>
+
 using namespace std;
 
 
-template<class T>
-class Graph {
-  public:
-    int size() {
-      return adj_list.size();
-    }
+template<typename T>
+int Graph<T>::size() {
+  return adj_list.size();
+}
 
-    void add_edge(T &n1, T &n2) {
-      adj_list[&n1].insert(&n2);
-      adj_list[&n2].insert(&n1);
-    }
+template<typename T>
+void Graph<T>::add_edge(T &n1, T &n2) {
+  adj_list[&n1].insert(&n2);
+  adj_list[&n2].insert(&n1);
+}
 
-    void print_graph()
-    {
-      for (auto const& pair: adj_list) {
-          cout << *pair.first << ": ";
-          for (const auto& elem: pair.second) {
-            cout << *elem << " ";
-          }
-          cout << endl;
+template<typename T>
+void Graph<T>::print_graph()
+{
+  for (auto const& pair: adj_list) {
+      cout << *pair.first << ": ";
+      for (const auto& elem: pair.second) {
+        cout << *elem << " ";
       }
-    }
+      cout << endl;
+  }
+}
 
-    vector<vector<T*>> connected_components() {
-      unordered_map<T*, bool> visited;
-      unordered_set<T *> not_found;
-      stack<T*> stack;
-      vector<vector<T*>> result;
-      vector<T*> conn_comps;
-      T* s;
+template<typename T>
+vector<vector<T*>> Graph<T>::connected_components() {
+  unordered_map<T*, bool> visited;
+  unordered_set<T *> not_found;
+  stack<T*> stack;
+  vector<vector<T*>> result;
+  vector<T*> conn_comps;
+  T* s;
 
-      for (auto const& pair: adj_list) {
-          visited[pair.first] = false;
-          not_found.insert(pair.first);
-      }
+  for (auto const& pair: adj_list) {
+      visited[pair.first] = false;
+      not_found.insert(pair.first);
+  }
 
-      while(not_found.size() > 0) {
-        conn_comps.clear();
-        stack.push(*not_found.begin());
+  while(not_found.size() > 0) {
+    conn_comps.clear();
+    stack.push(*not_found.begin());
 
-        while (!stack.empty()) {
-          s = stack.top();
-          stack.pop();
+    while (!stack.empty()) {
+      s = stack.top();
+      stack.pop();
 
-          if (!visited[s]) {
-              conn_comps.push_back(s);
-              visited[s] = true;
-              not_found.erase(s);
-          }
-
-          for (const auto& i: adj_list[s]) {
-            if (!visited[i])
-              stack.push(i);
-          }
-        }
-        result.push_back(conn_comps);
-      }
-      return result;
-    }
-
-    vector<T*> one_cycle() {
-      unordered_map<T*, bool> visited;
-      unordered_set<T *> not_found;
-      stack<T*> stack;
-      vector<T*> cur_path; // track potential cycle
-      vector<T*> cycle; 
-      T* s;
-      T* last;
-
-      for (auto const& pair: adj_list) {
-          visited[pair.first] = false;
-          not_found.insert(pair.first);
+      if (!visited[s]) {
+          conn_comps.push_back(s);
+          visited[s] = true;
+          not_found.erase(s);
       }
 
-      while(not_found.size() > 0) {
-        stack.push(*not_found.begin());
-        cur_path.clear();
+      for (const auto& i: adj_list[s]) {
+        if (!visited[i])
+          stack.push(i);
+      }
+    }
+    result.push_back(conn_comps);
+  }
+  return result;
+}
 
-        while (!stack.empty()) {
-          s = stack.top();
-          stack.pop();
+template<typename T>
+vector<T*> Graph<T>::one_cycle() {
+  unordered_map<T*, bool> visited;
+  unordered_set<T *> not_found;
+  stack<T*> stack;
+  vector<T*> cur_path; // track potential cycle
+  vector<T*> cycle; 
+  T* s;
+  T* last;
 
-          if (!visited[s]) {
-              cur_path.push_back(s);
-              visited[s] = true;
-              not_found.erase(s);
-          }
+  for (auto const& pair: adj_list) {
+      visited[pair.first] = false;
+      not_found.insert(pair.first);
+  }
 
-          bool next = false;
-          bool start_c = false;
-          for (const auto& i: adj_list[s]) {
-            if (visited[i]) {
-              if(i != last) {
-                for(const auto& j: cur_path) {
-                  if(j == i)
-                    start_c = true;
-                  if(start_c)
-                    cycle.push_back(j);
-                }
-                cycle.push_back(i);
-                return cycle;
-              }
+  while(not_found.size() > 0) {
+    stack.push(*not_found.begin());
+    cur_path.clear();
+
+    while (!stack.empty()) {
+      s = stack.top();
+      stack.pop();
+
+      if (!visited[s]) {
+          cur_path.push_back(s);
+          visited[s] = true;
+          not_found.erase(s);
+      }
+
+      bool next = false;
+      bool start_c = false;
+      for (const auto& i: adj_list[s]) {
+        if (visited[i]) {
+          if(i != last) {
+            for(const auto& j: cur_path) {
+              if(j == i)
+                start_c = true;
+              if(start_c)
+                cycle.push_back(j);
             }
-            else {
-              stack.push(i);
-              next = true;
-            }
-          }
-          if (!next)
-            cur_path.pop_back();
-          last = s;
-        }
-      }
-      return vector<T*>();
-    }
-
-    vector<T*> shortest_path(T &src, T &dest) {
-      unordered_map<T*, T*> last_visited;
-      unordered_map<T*, int> distances;
-      list<T*> queue;
-      T* cur;
-      vector<T*> path;
-
-      for (auto const& pair: adj_list)
-          distances[pair.first] = -1;
- 
-      distances[&src] = 0;
-      queue.push_back(&src);
- 
-      while(!queue.empty()) {
-        cur = queue.front();
-        queue.pop_front();
- 
-        for (auto i = adj_list[cur].begin(); i != adj_list[cur].end(); ++i) {
-          if (distances[*i] < 0 || distances[*i] > distances[cur]+1) {
-            distances[*i] = distances[cur]+1;
-            last_visited[*i] = cur;
-            queue.push_back(*i);
+            cycle.push_back(i);
+            return cycle;
           }
         }
-      }
-
-      if (distances.find(&dest)!=distances.end()){
-        T* cur = &dest;
-        path.push_back(cur);
-        while(true) {
-          path.push_back(last_visited[cur]);
-          if (last_visited[cur] == &src)
-            return path;
-          cur = last_visited[cur];
+        else {
+          stack.push(i);
+          next = true;
         }
       }
-      return vector<T*>();
+      if (!next)
+        cur_path.pop_back();
+      last = s;
     }
+  }
+  return vector<T*>();
+}
 
-  private:
-    unordered_map<T*, unordered_set<T *>> adj_list;
-};
+template<typename T>
+vector<T*> Graph<T>::shortest_path(T &src, T &dest) {
+  unordered_map<T*, T*> last_visited;
+  unordered_map<T*, int> distances;
+  list<T*> queue;
+  T* cur;
+  vector<T*> path;
+
+  for (auto const& pair: adj_list)
+      distances[pair.first] = -1;
+
+  distances[&src] = 0;
+  queue.push_back(&src);
+
+  while(!queue.empty()) {
+    cur = queue.front();
+    queue.pop_front();
+
+    for (auto i = adj_list[cur].begin(); i != adj_list[cur].end(); ++i) {
+      if (distances[*i] < 0 || distances[*i] > distances[cur]+1) {
+        distances[*i] = distances[cur]+1;
+        last_visited[*i] = cur;
+        queue.push_back(*i);
+      }
+    }
+  }
+
+  if (distances.find(&dest)!=distances.end()){
+    T* cur = &dest;
+    path.push_back(cur);
+    while(true) {
+      path.push_back(last_visited[cur]);
+      if (last_visited[cur] == &src)
+        return path;
+      cur = last_visited[cur];
+    }
+  }
+  return vector<T*>();
+}
 
 
 int main() {
