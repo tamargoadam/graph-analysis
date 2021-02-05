@@ -58,7 +58,11 @@ Graph<int> heap(int n) {
 }
 
 int main() {
-    Graph<int> g = empty_graph(10);
+    Graph<int> g = cycle_graph(10);
+    g.print_graph();
+
+    cout << endl;
+
     vector<vector<int*>> comps = g.connected_components();
     for (int i = 0; i < comps.size(); i++) {
         for (int j = 0; j < comps[i].size(); j++)
@@ -72,7 +76,7 @@ int main() {
         cout << *cycle[i] << " ";
     cout << endl << endl;
 
-    vector<int*> shp = g.shortest_path(v[0], v[3]);
+    vector<int*> shp = g.shortest_path(2, 7);
     for(int i=0; i<shp.size(); i++)
         cout << *shp[i] << " ";
 

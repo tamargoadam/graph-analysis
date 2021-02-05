@@ -71,25 +71,25 @@ template<typename T>
 vector<T*> Graph<T>::one_cycle() {
   vector<bool> visited = vector<bool>(nodes.size(), false);
   unordered_set<int> not_found;
-  stack<int> stack;
-  vector<T*> cur_path; // track potential cycle
+  stack<pair<int, int>> stack;
+  vector<int> cur_path;
   vector<T*> cycle; 
-  int s;
-  int last;
+  int s, f;
 
   for (int i=0; i<nodes.size(); i++)
       not_found.insert(i);
 
   while(not_found.size() > 0) {
-    stack.push(*not_found.begin());
+    stack.push(make_pair(*not_found.begin(), -1));
     cur_path.clear();
 
     while (!stack.empty()) {
-      s = stack.top();
+      s = stack.top().first;
+      f = stack.top().second;
       stack.pop();
 
       if (!visited[s]) {
-          cur_path.push_back(&nodes[s]);
+          cur_path.push_back(s);
           visited[s] = true;
           not_found.erase(s);
       }
@@ -99,38 +99,38 @@ vector<T*> Graph<T>::one_cycle() {
       for (int i=0; i<adj_list[s].size(); i++) {
         int n = adj_list[s][i];
         if (visited[n]) {
-          if(n != last) {
-            for(const auto& j: cur_path) {
-              if(j == &nodes[n])
+          if(n != f) {
+            for(int j=0; j<cur_path.size(); j++) {
+              if(cur_path[j] == n)
                 start_c = true;
-              if(start_c)
-                cycle.push_back(j);
+              if(start_c) {
+                cycle.push_back(&nodes[cur_path[j]]);
+              }
             }
             cycle.push_back(&nodes[n]);
             return cycle;
           }
         }
         else {
-          stack.push(n);
+          stack.push(make_pair(n, s));
           next = true;
         }
       }
       if (!next)
         cur_path.pop_back();
-      last = s;
     }
   }
   return vector<T*>();
 }
 
-// TODO: fix this
 template<typename T>
 vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
-  vector<int> last_visited;
+  vector<int> last_visited = vector<int>(nodes.size(), -1);
   vector<int> distances = vector<int>(nodes.size(), -1);
   list<int> queue;
   int cur;
   vector<T*> path;
+
 
   distances[src_ind] = 0;
   queue.push_back(src_ind);
@@ -138,6 +138,7 @@ vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
   while(!queue.empty()) {
     cur = queue.front();
     queue.pop_front();
+
 
     for (int i=0; i<adj_list[cur].size(); i++) {
       int n = adj_list[cur][i];
@@ -154,6 +155,8 @@ vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
     path.push_back(&nodes[n]);
     while(true) {
       path.push_back(&nodes[last_visited[n]]);
+      if (last_visited[n] == -1)
+        return vector<T*>();
       if (last_visited[n] == src_ind)
         return path;
       n = last_visited[n];
@@ -163,37 +166,37 @@ vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
 }
 
 
-int main() {
-  Graph<int> g = Graph<int>();
-  vector<int> v = {1,2,3,4,5,6,7,8,9,10};
-  g.load_nodes(v);
-  g.add_edge(0, 1);
-  g.add_edge(0, 5);
-  g.add_edge(0, 2);
-  g.add_edge(1, 9);
-  g.add_edge(5, 2);
-  g.add_edge(3, 9);
-  g.add_edge(0, 7);
-  g.print_graph();
+// int main() {
+//   Graph<int> g = Graph<int>();
+//   vector<int> v = {1,2,3,4,5,6,7,8,9,10};
+//   g.load_nodes(v);
+//   g.add_edge(0, 1);
+//   g.add_edge(0, 5);
+//   g.add_edge(0, 2);
+//   g.add_edge(1, 9);
+//   g.add_edge(5, 2);
+//   g.add_edge(3, 9);
+//   g.add_edge(0, 7);
+//   g.print_graph();
   
-  cout << endl;
+//   cout << endl;
 
-  vector<vector<int*>> comps = g.connected_components();
-  for (int i = 0; i < comps.size(); i++) {
-    for (int j = 0; j < comps[i].size(); j++)
-      cout << *comps[i][j] << " ";
-    cout << endl;
-  }
-  cout << endl;
+//   vector<vector<int*>> comps = g.connected_components();
+//   for (int i = 0; i < comps.size(); i++) {
+//     for (int j = 0; j < comps[i].size(); j++)
+//       cout << *comps[i][j] << " ";
+//     cout << endl;
+//   }
+//   cout << endl;
 
-  vector<int*> cycle = g.one_cycle();
-  for(int i=0; i<cycle.size(); i++)
-    cout << *cycle[i] << " ";
-  cout << endl << endl;
+//   vector<int*> cycle = g.one_cycle();
+//   for(int i=0; i<cycle.size(); i++)
+//     cout << *cycle[i] << " ";
+//   cout << endl << endl;
 
-  vector<int*> shp = g.shortest_path(0, 9);
-  for(int i=0; i<shp.size(); i++)
-    cout << *shp[i] << " ";
+//   vector<int*> shp = g.shortest_path(0, 9);
+//   for(int i=0; i<shp.size(); i++)
+//     cout << *shp[i] << " ";
 
-  return 0;
-}
+//   return 0;
+// }
