@@ -24,43 +24,44 @@ void netNode::addRating(int movie, int rating, string date)
 }
 
 
-Graph<netNode*> * netNode::buildGraph(string filename)
+Graph<netNode*> * buildGraph(vector<string> filenames)
 {
     unordered_map<int, netNode *> nodes;
 
     ifstream data;
-    data.open(filename);
-    string line = "";
+    for (auto filename: filenames) {
+        data.open(filename);
+        string line = "";
 
-    regex movie_header("[0-9]+:");
+        regex movie_header("[0-9]+:");
 
-    int movie = 0;
+        int movie = 0;
 
-    while (getline(data, line))
-    {
-        if (regex_match(line, movie_header))
-            movie = stoi(line);
-
-        else
+        while (getline(data, line))
         {
-            int id = stoi(line.substr(0, line.find(',')));
-
-            if (nodes.find(id) != nodes.end())
-            {
-                line = line.substr(line.find(',') + 1, line.length() - 1);
-                int rating = stoi(line.substr(0, line.find(',')));
-                string dateString = line.substr(line.find(',') + 1, line.length() - 1);
-
-                nodes[id]->addRating(movie, rating, dateString);
-            }
+            if (regex_match(line, movie_header))
+                movie = stoi(line);
 
             else
             {
-                nodes[id] = new netNode(line);
+                int id = stoi(line.substr(0, line.find(',')));
+
+                if (nodes.find(id) != nodes.end())
+                {
+                    line = line.substr(line.find(',') + 1, line.length() - 1);
+                    int rating = stoi(line.substr(0, line.find(',')));
+                    string dateString = line.substr(line.find(',') + 1, line.length() - 1);
+
+                    nodes[id]->addRating(movie, rating, dateString);
+                }
+
+                else
+                {
+                    nodes[id] = new netNode(line);
+                }
             }
         }
     }
-
     Graph<netNode*> *graph = new Graph<netNode*>();
     vector<netNode*> nodesVector;
 

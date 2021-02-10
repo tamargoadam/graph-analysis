@@ -1,3 +1,6 @@
+#ifndef GRAPH_MAKE_H
+#define GRAPH_MAKE_H
+
 #include "graph_operations.h"
 #include <string>
 #include <sstream>
@@ -19,7 +22,8 @@ struct netNode {
         time_t convertDate(string dateString);
         void addRating(int movie, int rating, string date);
 
-        Graph<netNode*> *buildGraph(string filename);
-
 };
 
+Graph<netNode*> *buildGraph(vector<string> filenames);
+
+#endif
