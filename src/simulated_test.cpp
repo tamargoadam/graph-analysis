@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "graph_simulator.cpp"
+=======
+#include "graph_simulator.h"
+>>>>>>> realtest
 
 int main() {
     Graph<int> g = cycle_graph(10);
