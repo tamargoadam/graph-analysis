@@ -36,3 +36,6 @@ demo_graph.txt
 ratings_data_*.txt
 movie_titles.csv
 assignment_readme
+
+#VS Code
+.vscode*
