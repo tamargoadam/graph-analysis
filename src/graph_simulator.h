@@ -9,5 +9,6 @@
 Graph<int> cycle_graph(int n);
 Graph<int> complete_graph(int n);
 Graph<int> empty_graph(int n);
+Graph<int> heap(int n);
 
 #endif
