@@ -71,3 +71,7 @@ Graph<netNode*> * buildGraph(vector<string> filenames)
     graph->load_nodes(nodesVector);
     return graph;
 }
+
+void adjCrit_1(Graph<netNode*>* graph) {
+    for (auto node : graph)
+}

@@ -166,6 +166,14 @@ vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
 }
 
 
+template<typename T>
+
+Graph<T>::~Graph() {
+  for (auto n : this->nodes) 
+    delete n;
+}
+
+
 // int main() {
 //   Graph<int> g = Graph<int>();
 //   vector<int> v = {1,2,3,4,5,6,7,8,9,10};

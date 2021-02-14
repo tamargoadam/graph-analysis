@@ -9,6 +9,8 @@
 #include <unordered_set>
 #include <stack>
 
+using namespace std;
+
 template<typename T>
 class Graph {
   public:
@@ -19,6 +21,8 @@ class Graph {
     std::vector<std::vector<T*>> connected_components();
     std::vector<T*> one_cycle();
     std::vector<T*> shortest_path(int src_ind, int dest_ind);
+
+    ~Graph();  
 
   private:
     // std::unordered_map<T*, std::unordered_set<T *>> adj_list;
