@@ -18,6 +18,11 @@ void Graph<T>::add_edge(int ind1, int ind2) {
 }
 
 template<typename T>
+void Graph<T>::clear_edges() {
+  this->adj_list = vector<vector<int>>();
+}
+
+template<typename T>
 void Graph<T>::print_graph()
 {
   for (int i=0; i<adj_list.size(); i++) {
@@ -165,12 +170,91 @@ vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
   return vector<T*>();
 }
 
+template<typename T>
+Graph<T>::~Graph() {}
+
+template<>
+Graph<netNode*>::~Graph() {
+  for (auto n : this->nodes) {
+    delete n;
+  }
+}
 
 template<typename T>
+void Graph<T>::adjCrit1() {
+    cout << "Function only intended for graphs of type netNode*" << endl;
+}
 
-Graph<T>::~Graph() {
-  for (auto n : this->nodes) 
-    delete n;
+template<typename T>
+void Graph<T>::adjCrit2() {
+    cout << "Function only intended for graphs of type netNode*" << endl;
+}
+
+template<typename T>
+void Graph<T>::adjCrit3() {
+    cout << "Function only intended for graphs of type netNode*" << endl;
+}
+
+
+// Adds an edge between any two nodes that share a movie and both have a rating over 3 stars
+template<>
+void Graph<netNode*>::adjCrit1() {
+  this->clear_edges();
+
+  int numEdges = 0;
+  cout << "Starting Adj Crit 1 ..." << endl;
+  cout << this->nodes.size() << endl;
+  clock_t start = clock(); 
+
+  for (int i = 0; i < this->nodes.size(); i++) {
+    for (int j = i+1; j < this->nodes.size(); j++) {
+      if (i%1000 == 0 || j%1000 == 0) cout << i << " " << j << endl;
+      for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++) {
+        if ((it->second).first > 3) {
+          if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end() && (nodes[j]->ratings[it->first]).first > 3) {
+            this->add_edge(i, j);
+            numEdges++;
+          } 
+        }
+      }
+    }
+  }
+  clock_t tot = clock() - start;
+  cout << "Operation completed. Added " << numEdges << " in " << tot << endl;
+}
+
+//
+template<>
+void Graph<netNode*>::adjCrit2() {
+  this->clear_edges();
+  for(int i = 0; i < this->nodes.size(); i++) {
+    for (int j = i+1; j < this->nodes.size(); j++) {
+      for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++) {
+        if ((it->second).first == 1) {
+          if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end() && nodes[j]->ratings[it->first].first> 3) {
+            this->add_edge(i, j);
+          } 
+        }
+      }
+    }
+  }
+}
+
+template<>
+void Graph<netNode*>::adjCrit3() {
+  this->clear_edges();
+  for(int i = 0; i < this->nodes.size(); i++) {
+    for (int j = i+1; j < this->nodes.size(); j++) {
+      for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++) {
+        auto f = nodes[j]->ratings.find(it->first);
+        if(f != nodes[j]->ratings.end()) {
+          if ((f->second).second == (it->second).second) {
+            this->add_edge(i, j);
+          }
+        }
+      }
+    }
+  }
 }
 
 

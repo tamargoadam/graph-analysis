@@ -2,76 +2,58 @@
 
 using namespace std;
 
-netNode::netNode(string line)
-{
-    int id = stoi(line.substr(0, line.find(',')));
-    line = line.substr(line.find(',') + 1, line.length() - 1);
-    int rating = stoi(line.substr(0, line.find(',')));
-    string dateString = line.substr(line.find(',') + 1, line.length() - 1);
-}
-
-time_t netNode::convertDate(string dateString) {
-    struct tm tm;
-    stringstream ds(dateString);
-
-    ds >> get_time(&tm, "%Y-%m-%d");
-    return mktime(&tm);
-}
-
-void netNode::addRating(int movie, int rating, string date)
-{
-    this->ratings[movie] = make_pair(rating, convertDate(date));
-}
-
-
-Graph<netNode*> * buildGraph(vector<string> filenames)
+Graph<netNode *> *buildGraph(vector<string> filenames)
 {
     unordered_map<int, netNode *> nodes;
 
     ifstream data;
-    for (auto filename: filenames) {
+    for (auto filename : filenames)
+    {
         data.open(filename);
         string line = "";
 
-        regex movie_header("[0-9]+:");
+        //regex movie_header("[0-9]+:");
 
         int movie = 0;
 
         while (getline(data, line))
         {
-            if (regex_match(line, movie_header))
+            if (line.find(':') < line.length())
+            {
                 movie = stoi(line);
-
+                if (movie%1000 == 0) cout << movie << endl;
+            }
             else
             {
-                int id = stoi(line.substr(0, line.find(',')));
+                int id = stoi(line);
+
+                line = line.substr(line.find(',') + 1, line.length() - 1);
+                int rating = stoi(line);
+                string date = line.substr(line.find(',') + 1, line.length() - 1);
+            
 
                 if (nodes.find(id) != nodes.end())
                 {
-                    line = line.substr(line.find(',') + 1, line.length() - 1);
-                    int rating = stoi(line.substr(0, line.find(',')));
-                    string dateString = line.substr(line.find(',') + 1, line.length() - 1);
-
-                    nodes[id]->addRating(movie, rating, dateString);
+                    
+                    nodes[id]->addRating(movie, rating, date);
                 }
 
                 else
                 {
-                    nodes[id] = new netNode(line);
+                    nodes[id] = new netNode(id, movie, rating, date);
                 }
             }
         }
     }
-    Graph<netNode*> *graph = new Graph<netNode*>();
-    vector<netNode*> nodesVector;
+    Graph<netNode *> *graph = new Graph<netNode *>();
+    vector<netNode *> nodesVector;
 
-    for (auto const& n : nodes) 
+
+    for (auto const &n : nodes)
         nodesVector.push_back(n.second);
 
     graph->load_nodes(nodesVector);
+    
+    cout << "Nodes Created: " << nodesVector.size() << endl;
     return graph;
-}
-
-void adjCrit_1(Graph<netNode*>* graph) {
-    for (auto node : graph)
 }
