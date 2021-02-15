@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Graph<netNode *> *buildGraph(vector<string> filenames)
+Graph<netNode *> buildGraph(vector<string> filenames)
 {
     unordered_map<int, netNode *> nodes;
 
@@ -45,14 +45,14 @@ Graph<netNode *> *buildGraph(vector<string> filenames)
             }
         }
     }
-    Graph<netNode *> *graph = new Graph<netNode *>();
+    Graph<netNode *> graph;
     vector<netNode *> nodesVector;
 
 
     for (auto const &n : nodes)
         nodesVector.push_back(n.second);
 
-    graph->load_nodes(nodesVector);
+    graph.load_nodes(nodesVector);
     
     cout << "Nodes Created: " << nodesVector.size() << endl;
     return graph;

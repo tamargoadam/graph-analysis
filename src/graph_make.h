@@ -4,4 +4,4 @@
 
 using namespace std;
 
-Graph<netNode *> *buildGraph(vector<string> filenames);
+Graph<netNode *> buildGraph(vector<string> filenames);

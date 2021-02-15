@@ -20,7 +20,6 @@ class Graph {
     int size();
     void load_nodes(std::vector<T> n);
     void add_edge(int ind1, int ind2);
-    void clear_edges();
     void print_graph();
     std::vector<std::vector<T*>> connected_components();
     std::vector<T*> one_cycle();
