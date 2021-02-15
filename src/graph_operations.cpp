@@ -172,23 +172,6 @@ vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
     }
   }
 
-<<<<<<< HEAD
-  if (distances[dest_ind] != -1)
-  {
-    int n = dest_ind;
-    path.push_back(&nodes[n]);
-    while (true)
-    {
-      path.push_back(&nodes[last_visited[n]]);
-      if (last_visited[n] == -1)
-        return vector<T *>();
-      if (last_visited[n] == src_ind)
-        return path;
-      n = last_visited[n];
-    }
-  }
-  return vector<T *>();
-=======
   for (int i=0; i<nodes.size(); i++) {
     if (distances[i]!=-1 && i!=src_ind){
       int n = i;
@@ -201,7 +184,6 @@ vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
     }
   }
   return sp;
->>>>>>> d02eb641d345d919b40b4e90ce9dad700be743d9
 }
 
 template <typename T>
