@@ -43,10 +43,9 @@ int main() {
     
     vector<vector<int*>> comps;
     vector<int*> cycle;
-    vector<int*> shp;
+    vector<vector<int*>> shp;
     int op_num = -1;
     int shp1 = -1;
-    int shp2 = -1;
     while (op_num < 3) {
         cout << "Please input the int corresponding to the operation you would like to run:\n" <<
         "0 - connected components  \n1 - one cycle \n2 - shortest path \n3 - exit\n";
@@ -89,22 +88,21 @@ int main() {
                     cin >> shp1;
                     cout << endl;
                 }
-                while (shp2 < 0 || shp2 > num_nodes-1) {
-                    cout << "Please input destination node index for the shortest path opperation: ";
-                    cin >> shp2;
-                    cout << endl;
-                }
                 c_start = clock();
-                shp = g.shortest_path(shp1, shp2);
+                shp = g.shortest_path(shp1);
                 c_end = clock();
                 time_elapsed = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
 
-                for(int i=0; i<shp.size(); i++)
-                    cout << *shp[i] << " ";
-                cout << endl << endl;
+                for(int i=0; i<shp.size(); i++) {
+                    for(int j=0; j<shp[i].size(); j++)
+                        cout << *shp[i][j] << " ";
+                    cout << endl;
+                }
+                cout << endl;
 
-                cout << "CPU time to find shortest path from " << shp1 << " to " << shp2 << ": " << time_elapsed << " ms" << endl;
+                cout << "CPU time to find shortest path to all connected nodes from " << shp1 << ": " << time_elapsed << " ms" << endl;
                 shp.clear();
+                shp1 = -1;
                 break;
             default:
                 break; 

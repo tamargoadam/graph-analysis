@@ -129,12 +129,12 @@ vector<T*> Graph<T>::one_cycle() {
 }
 
 template<typename T>
-vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
+vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
   vector<int> last_visited = vector<int>(nodes.size(), -1);
   vector<int> distances = vector<int>(nodes.size(), -1);
   list<int> queue;
   int cur;
-  vector<T*> path;
+  vector<vector<T*>> sp;
 
 
   distances[src_ind] = 0;
@@ -155,19 +155,18 @@ vector<T*> Graph<T>::shortest_path(int src_ind, int dest_ind) {
     }
   }
 
-  if (distances[dest_ind]!=-1){
-    int n = dest_ind;
-    path.push_back(&nodes[n]);
-    while(true) {
-      path.push_back(&nodes[last_visited[n]]);
-      if (last_visited[n] == -1)
-        return vector<T*>();
-      if (last_visited[n] == src_ind)
-        return path;
-      n = last_visited[n];
+  for (int i=0; i<nodes.size(); i++) {
+    if (distances[i]!=-1 && i!=src_ind){
+      int n = i;
+      sp.push_back(vector<T*>());
+      sp[sp.size()-1].push_back(&nodes[n]);
+      while(last_visited[n] != -1) {
+        sp[sp.size()-1].push_back(&nodes[last_visited[n]]);
+        n = last_visited[n];
+      }
     }
   }
-  return vector<T*>();
+  return sp;
 }
 
 template<typename T>
@@ -256,39 +255,3 @@ void Graph<netNode*>::adjCrit3() {
     }
   }
 }
-
-
-// int main() {
-//   Graph<int> g = Graph<int>();
-//   vector<int> v = {1,2,3,4,5,6,7,8,9,10};
-//   g.load_nodes(v);
-//   g.add_edge(0, 1);
-//   g.add_edge(0, 5);
-//   g.add_edge(0, 2);
-//   g.add_edge(1, 9);
-//   g.add_edge(5, 2);
-//   g.add_edge(3, 9);
-//   g.add_edge(0, 7);
-//   g.print_graph();
-  
-//   cout << endl;
-
-//   vector<vector<int*>> comps = g.connected_components();
-//   for (int i = 0; i < comps.size(); i++) {
-//     for (int j = 0; j < comps[i].size(); j++)
-//       cout << *comps[i][j] << " ";
-//     cout << endl;
-//   }
-//   cout << endl;
-
-//   vector<int*> cycle = g.one_cycle();
-//   for(int i=0; i<cycle.size(); i++)
-//     cout << *cycle[i] << " ";
-//   cout << endl << endl;
-
-//   vector<int*> shp = g.shortest_path(0, 9);
-//   for(int i=0; i<shp.size(); i++)
-//     cout << *shp[i] << " ";
-
-//   return 0;
-// }

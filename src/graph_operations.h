@@ -24,7 +24,7 @@ class Graph {
     void print_graph();
     std::vector<std::vector<T*>> connected_components();
     std::vector<T*> one_cycle();
-    std::vector<T*> shortest_path(int src_ind, int dest_ind);
+    std::vector<vector<T*>> shortest_path(int src_ind);
 
 
     ~Graph();
@@ -34,7 +34,6 @@ class Graph {
     void adjCrit3();
 
   private:
-    // std::unordered_map<T*, std::unordered_set<T *>> adj_list;
     std::vector<std::vector<int>> adj_list;
     std::vector<T> nodes;
 
