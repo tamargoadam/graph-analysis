@@ -143,14 +143,14 @@ vector<T *> Graph<T>::one_cycle()
   return vector<T *>();
 }
 
-template <typename T>
-vector<T *> Graph<T>::shortest_path(int src_ind, int dest_ind)
-{
+template<typename T>
+vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
   vector<int> last_visited = vector<int>(nodes.size(), -1);
   vector<int> distances = vector<int>(nodes.size(), -1);
   list<int> queue;
   int cur;
-  vector<T *> path;
+  vector<vector<T*>> sp;
+
 
   distances[src_ind] = 0;
   queue.push_back(src_ind);
@@ -172,6 +172,7 @@ vector<T *> Graph<T>::shortest_path(int src_ind, int dest_ind)
     }
   }
 
+<<<<<<< HEAD
   if (distances[dest_ind] != -1)
   {
     int n = dest_ind;
@@ -187,6 +188,20 @@ vector<T *> Graph<T>::shortest_path(int src_ind, int dest_ind)
     }
   }
   return vector<T *>();
+=======
+  for (int i=0; i<nodes.size(); i++) {
+    if (distances[i]!=-1 && i!=src_ind){
+      int n = i;
+      sp.push_back(vector<T*>());
+      sp[sp.size()-1].push_back(&nodes[n]);
+      while(last_visited[n] != -1) {
+        sp[sp.size()-1].push_back(&nodes[last_visited[n]]);
+        n = last_visited[n];
+      }
+    }
+  }
+  return sp;
+>>>>>>> d02eb641d345d919b40b4e90ce9dad700be743d9
 }
 
 template <typename T>
@@ -307,6 +322,7 @@ void Graph<netNode *>::adjCrit3()
     }
   }
 }
+<<<<<<< HEAD
 
 // int main() {
 //   Graph<int> g = Graph<int>();
@@ -342,3 +358,5 @@ void Graph<netNode *>::adjCrit3()
 
 //   return 0;
 // }
+=======
+>>>>>>> d02eb641d345d919b40b4e90ce9dad700be743d9
