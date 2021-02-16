@@ -39,4 +39,8 @@ class Graph {
     std::vector<T> nodes;
 
 };
+
+struct avgRatingComparator{
+  bool operator() (const pair<netNode*, double>& l, const pair<netNode*, double>& r);
+};
 #endif

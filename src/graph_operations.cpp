@@ -329,10 +329,14 @@ void Graph<netNode *>::adjCrit3()
 
 }
 
-template<>
+bool avgRatingComparator::operator()(const pair<netNode*, double>& l, const pair<netNode*, double>& r) {
+  return l.second < r.second;
+}
 
+
+template<>
 void Graph<netNode*>::adjCrit4() {
-  unordered_map<netNode*, double> avg_ratings;
+  vector<pair<netNode*, double>> avg_ratings;
 
   int numEdges = 0;
   cout << "Starting Adj Crit 4 ..." << endl;
@@ -349,23 +353,41 @@ void Graph<netNode*>::adjCrit4() {
       total += (r->second).first;
       counter++;
     }
-    avg_ratings[n] = total / counter;
+    avg_ratings.push_back(make_pair(n, total / counter));
   }
+
+  sort(avg_ratings.begin(), avg_ratings.end(), avgRatingComparator());
+
   cout << "Calculated averages" << endl;
 
-  for (int i = 0; i < this->nodes.size(); i++)
-  {
+  int span_floor = 0;
+  for (int i = 1; i < avg_ratings.size(); i++) {
     if (i%1000 == 0) cout << i << endl;
-    for (int j = i + 1; j < this->nodes.size(); j++)
-    {
-      double diff = avg_ratings[nodes[i]] - avg_ratings[nodes[j]];
-      if (diff < 0.001 && diff > -0.001) {
-        this->add_edge(i, j);
-        numEdges++;
+    if (avg_ratings[i].second - avg_ratings[i-1].second > 0.0001) {
+      for (int j = span_floor; j < i; j++) {
+        for (int k = j+1; k < i; k++) {
+          this->add_edge(j, k);
+          numEdges++;
+        }
       }
+      span_floor = i;
     }
   }
+
+  // for (int i = 0; i < this->nodes.size(); i++)
+  // {
+  //   if (i%1000 == 0) cout << i << endl;
+  //   for (int j = i + 1; j < this->nodes.size(); j++)
+  //   {
+  //     double diff = avg_ratings[nodes[i]] - avg_ratings[nodes[j]];
+  //     if (diff < 0.001 && diff > -0.001) {
+  //       this->add_edge(i, j);
+  //       numEdges++;
+  //     }
+  //   }
+  // }
 
   clock_t tot = clock() - start;
   cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
 }
+
