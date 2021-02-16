@@ -187,6 +187,13 @@ vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
 }
 
 template <typename T>
+void Graph<T>::clear_edges() {
+  for (auto list : this->adj_list) {
+    list.clear();
+  }
+}
+
+template <typename T>
 Graph<T>::~Graph() {}
 
 template <>
@@ -216,11 +223,10 @@ void Graph<T>::adjCrit3()
   cout << "Function only intended for graphs of type netNode*" << endl;
 }
 
-// Adds an edge between any two nodes that share a movie and both have a rating over 3 stars
+// Adds an edge between any two nodes that share a movie
 template <>
 void Graph<netNode *>::adjCrit1()
 {
-
   int numEdges = 0;
   cout << "Starting Adj Crit 1 ..." << endl;
   cout << this->nodes.size() << endl;
@@ -246,34 +252,36 @@ void Graph<netNode *>::adjCrit1()
     }
   }
   clock_t tot = clock() - start;
-  cout << "Operation completed. Added " << numEdges << " in " << tot << endl;
+  cout << "Operation completed. Added " << numEdges << " edges in " << tot << " ms" << endl;
 }
 
 //
 template <>
 void Graph<netNode *>::adjCrit2()
 {
-  
   int numEdges = 0;
   cout << "Starting Adj Crit 2 ..." << endl;
   cout << this->nodes.size() << endl;
+
   clock_t start = clock();
 
   for (int i = 0; i < this->nodes.size(); i++)
   {
+    unordered_map<int, int> common; // map<node index, numMovies> to track number of movies in common that both dislike
     for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
     {
-      if ((it->second).first > 3)
+      if ((it->second).first < 3 )
       {
         for (int j = i + 1; j < this->nodes.size(); j++)
         {
+          if (common[j] <3) {
+            if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end() && (nodes[j]->ratings[it->first]).first < 3)
+            {
+              
+              common[j]++;
+              if (common[j] == 3) add_edge(i, j);
 
-          if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end() && (nodes[j]->ratings[it->first]).first > 3)
-          {
-            this->add_edge(i, j);
-            numEdges++;
-            cout << "Edge Added" << endl;
-
+            }
           }
         }
       }
@@ -304,41 +312,3 @@ void Graph<netNode *>::adjCrit3()
     }
   }
 }
-<<<<<<< HEAD
-
-// int main() {
-//   Graph<int> g = Graph<int>();
-//   vector<int> v = {1,2,3,4,5,6,7,8,9,10};
-//   g.load_nodes(v);
-//   g.add_edge(0, 1);
-//   g.add_edge(0, 5);
-//   g.add_edge(0, 2);
-//   g.add_edge(1, 9);
-//   g.add_edge(5, 2);
-//   g.add_edge(3, 9);
-//   g.add_edge(0, 7);
-//   g.print_graph();
-
-//   cout << endl;
-
-//   vector<vector<int*>> comps = g.connected_components();
-//   for (int i = 0; i < comps.size(); i++) {
-//     for (int j = 0; j < comps[i].size(); j++)
-//       cout << *comps[i][j] << " ";
-//     cout << endl;
-//   }
-//   cout << endl;
-
-//   vector<int*> cycle = g.one_cycle();
-//   for(int i=0; i<cycle.size(); i++)
-//     cout << *cycle[i] << " ";
-//   cout << endl << endl;
-
-//   vector<int*> shp = g.shortest_path(0, 9);
-//   for(int i=0; i<shp.size(); i++)
-//     cout << *shp[i] << " ";
-
-//   return 0;
-// }
-=======
->>>>>>> d02eb641d345d919b40b4e90ce9dad700be743d9

@@ -44,6 +44,7 @@ Graph<netNode *> buildGraph(vector<string> filenames)
                 }
             }
         }
+        data.close();
     }
     Graph<netNode *> graph;
     vector<netNode *> nodesVector;

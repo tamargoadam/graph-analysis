@@ -25,6 +25,7 @@ class Graph {
     std::vector<T*> one_cycle();
     std::vector<vector<T*>> shortest_path(int src_ind);
 
+    void clear_edges();
 
     ~Graph();
 
