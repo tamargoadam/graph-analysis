@@ -38,7 +38,7 @@ int main() {
             break;
     }
     clock_t c_end = clock();
-    long double time_elapsed = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+    long double time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
     cout << "CPU time to build graph: " << time_elapsed << " ms" << endl << endl;
     
     vector<vector<int*>> comps;
@@ -57,12 +57,17 @@ int main() {
                 c_start = clock();
                 comps = g.connected_components();
                 c_end = clock();
-                time_elapsed = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+                time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
                 
-                for (int i = 0; i < comps.size(); i++) {
-                    for (int j = 0; j < comps[i].size(); j++)
-                    cout << *comps[i][j] << " ";
-                    cout << endl;
+                if (num_nodes < 100000) {
+                    for (int i = 0; i < comps.size(); i++) {
+                        for (int j = 0; j < comps[i].size(); j++)
+                        cout << *comps[i][j] << " ";
+                        cout << endl;
+                    }
+                }
+                else {
+                    cout << "Connected components found.";
                 }
                 cout << endl;
 
@@ -73,11 +78,16 @@ int main() {
                 c_start = clock();
                 cycle = g.one_cycle();
                 c_end = clock();
-                time_elapsed = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+                time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
                 
-                for(int i=0; i<cycle.size(); i++)
-                    cout << *cycle[i] << " ";
-                cout << endl << endl;
+                if (cycle.size() < 100000) {
+                    for(int i=0; i<cycle.size(); i++)
+                        cout << *cycle[i] << " ";
+                    cout << endl << endl;
+                }
+                else {
+                    cout << "Cycle found." << endl;
+                }
 
                 cout << "CPU time to find one cycle: " << time_elapsed << " ms" << endl;
                 cycle.clear();
@@ -91,12 +101,17 @@ int main() {
                 c_start = clock();
                 shp = g.shortest_path(shp1);
                 c_end = clock();
-                time_elapsed = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+                time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
 
-                for(int i=0; i<shp.size(); i++) {
-                    for(int j=0; j<shp[i].size(); j++)
-                        cout << *shp[i][j] << " ";
-                    cout << endl;
+                if (num_nodes <= 1000) {
+                    for(int i=0; i<shp.size(); i++) {
+                        for(int j=0; j<shp[i].size(); j++)
+                            cout << *shp[i][j] << " ";
+                        cout << endl;
+                    }
+                }
+                else {
+                    cout << "Shortest path found if present.";
                 }
                 cout << endl;
 
