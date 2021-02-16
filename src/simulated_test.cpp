@@ -1,5 +1,5 @@
 #include "graph_simulator.cpp"
-#include <ctime>
+#include <sys/time.h> 
 
 int main() {
 
@@ -22,7 +22,10 @@ int main() {
     Graph<int> g;
     string g_type [4] = {"cycle graph", "complete graph", "empty graph", "heap"};
 
-    clock_t c_start = clock();
+    struct timeval t1, t2;
+    double time_elapsed;
+
+    gettimeofday(&t1, NULL);
     switch(type_num) {
         case 0:
             g = cycle_graph(num_nodes);
@@ -37,8 +40,9 @@ int main() {
             g = heap(num_nodes);
             break;
     }
-    clock_t c_end = clock();
-    long double time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
+    gettimeofday(&t2, NULL);
+    time_elapsed = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
+    time_elapsed += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
     cout << "CPU time to build graph: " << time_elapsed << " ms" << endl << endl;
     
     vector<vector<int*>> comps;
@@ -54,10 +58,11 @@ int main() {
 
         switch(op_num) {
             case 0:
-                c_start = clock();
+                gettimeofday(&t1, NULL);
                 comps = g.connected_components();
-                c_end = clock();
-                time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
+                gettimeofday(&t2, NULL);
+                time_elapsed = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
+                time_elapsed += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
                 
                 if (num_nodes < 100000) {
                     for (int i = 0; i < comps.size(); i++) {
@@ -75,10 +80,11 @@ int main() {
                 comps.clear();
                 break;
             case 1:
-                c_start = clock();
+                gettimeofday(&t1, NULL);
                 cycle = g.one_cycle();
-                c_end = clock();
-                time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
+                gettimeofday(&t2, NULL);
+                time_elapsed = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
+                time_elapsed += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
                 
                 if (cycle.size() < 100000) {
                     for(int i=0; i<cycle.size(); i++)
@@ -98,10 +104,11 @@ int main() {
                     cin >> shp1;
                     cout << endl;
                 }
-                c_start = clock();
+                gettimeofday(&t1, NULL);
                 shp = g.shortest_path(shp1);
-                c_end = clock();
-                time_elapsed = 1000.0 * (double(c_end-c_start)) / CLOCKS_PER_SEC;
+                gettimeofday(&t2, NULL);
+                time_elapsed = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
+                time_elapsed += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
 
                 if (num_nodes <= 1000) {
                     for(int i=0; i<shp.size(); i++) {
