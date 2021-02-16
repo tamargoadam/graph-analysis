@@ -143,14 +143,14 @@ vector<T *> Graph<T>::one_cycle()
   return vector<T *>();
 }
 
-template<typename T>
-vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
+template <typename T>
+vector<vector<T *>> Graph<T>::shortest_path(int src_ind)
+{
   vector<int> last_visited = vector<int>(nodes.size(), -1);
   vector<int> distances = vector<int>(nodes.size(), -1);
   list<int> queue;
   int cur;
-  vector<vector<T*>> sp;
-
+  vector<vector<T *>> sp;
 
   distances[src_ind] = 0;
   queue.push_back(src_ind);
@@ -172,13 +172,16 @@ vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
     }
   }
 
-  for (int i=0; i<nodes.size(); i++) {
-    if (distances[i]!=-1 && i!=src_ind){
+  for (int i = 0; i < nodes.size(); i++)
+  {
+    if (distances[i] != -1 && i != src_ind)
+    {
       int n = i;
-      sp.push_back(vector<T*>());
-      sp[sp.size()-1].push_back(&nodes[n]);
-      while(last_visited[n] != -1) {
-        sp[sp.size()-1].push_back(&nodes[last_visited[n]]);
+      sp.push_back(vector<T *>());
+      sp[sp.size() - 1].push_back(&nodes[n]);
+      while (last_visited[n] != -1)
+      {
+        sp[sp.size() - 1].push_back(&nodes[last_visited[n]]);
         n = last_visited[n];
       }
     }
@@ -187,8 +190,10 @@ vector<vector<T*>> Graph<T>::shortest_path(int src_ind) {
 }
 
 template <typename T>
-void Graph<T>::clear_edges() {
-  for (auto list : this->adj_list) {
+void Graph<T>::clear_edges()
+{
+  for (auto list : this->adj_list)
+  {
     list.clear();
   }
 }
@@ -234,7 +239,8 @@ void Graph<netNode *>::adjCrit1()
 
   for (int i = 0; i < this->nodes.size(); i++)
   {
-    if (i%1000 == 0) cout << i << endl;
+    if (i % 1000 == 0)
+      cout << i << endl;
     for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
     {
       if ((it->second).first > 3)
@@ -267,22 +273,24 @@ void Graph<netNode *>::adjCrit2()
 
   for (int i = 0; i < this->nodes.size(); i++)
   {
-    if (i%1000 == 0) cout << i << endl;
+    if (i % 1000 == 0)
+      cout << i << endl;
 
     unordered_map<int, int> common; // map<node index, numMovies> to track number of movies in common that both dislike
     for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
     {
-      if ((it->second).first == 1 )
+      if ((it->second).first == 1)
       {
         for (int j = i + 1; j < this->nodes.size(); j++)
         {
-          if (common[j] < 3) {
+          if (common[j] < 3)
+          {
             if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end() && (nodes[j]->ratings[it->first]).first == 1)
             {
-              
-              common[j]++;
-              if (common[j] == 3) add_edge(i, j);
 
+              common[j]++;
+              if (common[j] == 3)
+                add_edge(i, j);
             }
           }
         }
@@ -302,22 +310,28 @@ void Graph<netNode *>::adjCrit3()
 
   clock_t start = clock();
 
-
   for (int i = 0; i < this->nodes.size(); i++)
   {
-    if (i%1000 == 0) cout << i << endl;
+    if (i % 1000 == 0)
+      cout << i << endl;
 
     for (int j = i + 1; j < this->nodes.size(); j++)
     {
       for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
       {
-        auto f = nodes[j]->ratings.find(it->first);
-        if (f != nodes[j]->ratings.end())
+        if ((it->second).first == 5)
         {
-          if ((f->second).second == (it->second).second)
+          auto f = nodes[j]->ratings.find(it->first);
+          if (f != nodes[j]->ratings.end())
           {
-            this->add_edge(i, j);
-            numEdges++;
+            if ((f->second).first == 5)
+            {
+              if ((f->second).second == (it->second).second)
+              {
+                this->add_edge(i, j);
+                numEdges++;
+              }
+            }
           }
         }
       }
@@ -326,21 +340,20 @@ void Graph<netNode *>::adjCrit3()
 
   clock_t tot = clock() - start;
   cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
-
 }
 
-bool avgRatingComparator::operator()(const pair<netNode*, double>& l, const pair<netNode*, double>& r) {
+bool avgRatingComparator::operator()(const pair<netNode *, double> &l, const pair<netNode *, double> &r)
+{
   return l.second < r.second;
 }
 
-
-
 // Sort nodes by their average movie rating. Essentially creates a doubly linked list where each node has a degree of 2 (except for the lowest and highest).
 // Could be
-template<>
-void Graph<netNode*>::adjCrit4() {
-  vector<pair<netNode*, double>> avg_ratings;
-  unordered_map<netNode*, int> node_index;
+template <>
+void Graph<netNode *>::adjCrit4()
+{
+  vector<pair<netNode *, double>> avg_ratings;
+  unordered_map<netNode *, int> node_index;
 
   int numEdges = 0;
   cout << "Starting Adj Crit 4 ..." << endl;
@@ -348,13 +361,13 @@ void Graph<netNode*>::adjCrit4() {
 
   clock_t start = clock();
 
-
-
-  for (int i = 0; i < this->nodes.size(); i++) {
+  for (int i = 0; i < this->nodes.size(); i++)
+  {
     double total = 0;
     int counter = 0;
     node_index[nodes[i]] = i;
-    for (auto r =  (nodes[i]->ratings).begin(); r != (nodes[i]->ratings).end(); r++) {
+    for (auto r = (nodes[i]->ratings).begin(); r != (nodes[i]->ratings).end(); r++)
+    {
       total += (r->second).first;
       counter++;
     }
@@ -365,11 +378,11 @@ void Graph<netNode*>::adjCrit4() {
 
   cout << "Calculated averages" << endl;
 
-  for (int i = 1; i < avg_ratings.size(); i++) {
-    this->add_edge(node_index[nodes[i]], node_index[nodes[i-1]]);
+  for (int i = 1; i < avg_ratings.size(); i++)
+  {
+    this->add_edge(node_index[nodes[i]], node_index[nodes[i - 1]]);
   }
- 
+
   clock_t tot = clock() - start;
   cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
 }
-
