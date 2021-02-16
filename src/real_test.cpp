@@ -5,6 +5,26 @@ using namespace std;
 
 void graphOperationsMenu(Graph<netNode*>& graph) {
     int option = -1;
+
+    int numComponents = -1;
+    clock_t tot;
+    vector<int> componentSizes;
+
+    cout << "Running Connected Components... " << endl;
+
+    clock_t start = clock();
+    auto c = graph.connected_components();
+    tot = clock()-start;
+
+    numComponents = c.size();
+
+    for (auto e : c) {
+        componentSizes.push_back(e.size());
+    }
+
+    cout << "Number of Connected Components: " << c.size() << endl;
+    cout << "Finished in " << tot << "ms" << endl;
+
     while (option != 0) {
         cout << "Graph Operations" << endl;
 
@@ -15,20 +35,19 @@ void graphOperationsMenu(Graph<netNode*>& graph) {
         cout << "   [0] Dispose of graph, return to previous menu" << endl;
         cin >> option;
 
-        int numComponents = -1;
-        clock_t tot;
-        vector<int> componentSizes;
+        
 
 
         switch (option) {
             case 0:
                 graph.clear_edges();
                 return;
-            case 1: {
+                break;
+            case 1: 
                 cout << "Running Connected Components... " << endl;
 
-                clock_t start = clock();
-                auto c = graph.connected_components();
+                start = clock();
+                c = graph.connected_components();
                 tot = clock()-start;
 
                 numComponents = c.size();
@@ -41,7 +60,7 @@ void graphOperationsMenu(Graph<netNode*>& graph) {
                 cout << "Finished in " << tot << "ms" << endl;
 
 
-            }
+            
                 break;
             case 2:
                 cout << "Number of Connected Components: " << numComponents << endl;
@@ -71,7 +90,7 @@ void buildGraphMenu(Graph<netNode*>& graph) {
         cout << "[1] Adjacency Criteria 1 - \"A Mutual Interest\" - Each person rated the same movie" << endl;
         cout << "[2] Adjacency Criteria 2 - \"Hater's Club\" - Both people have given a 2 star rating or lower on the same movie for at least 3 movies" << endl; 
         cout << "[3] Adjacency Criteria 3 - \"Trending\" - Both rated the same movie on the same day" << endl;
-        cout << "[4] Adjacency Criteria 4 - \"Great Minds\" - Ratings within 0.001 of each other" << endl;
+        cout << "[4] Adjacency Criteria 4 - \"Great Minds\" - Sort users by average rating, connect in order to form a Doubly-Linked-List in order. " << endl;
         cout << "   [0] Quit" << endl;
         cin >> option;
 

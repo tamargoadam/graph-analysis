@@ -272,12 +272,12 @@ void Graph<netNode *>::adjCrit2()
     unordered_map<int, int> common; // map<node index, numMovies> to track number of movies in common that both dislike
     for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
     {
-      if ((it->second).first < 3 )
+      if ((it->second).first == 1 )
       {
         for (int j = i + 1; j < this->nodes.size(); j++)
         {
-          if (common[j] <3) {
-            if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end() && (nodes[j]->ratings[it->first]).first < 3)
+          if (common[j] < 3) {
+            if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end() && (nodes[j]->ratings[it->first]).first == 1)
             {
               
               common[j]++;
@@ -334,9 +334,13 @@ bool avgRatingComparator::operator()(const pair<netNode*, double>& l, const pair
 }
 
 
+
+// Sort nodes by their average movie rating. Essentially creates a doubly linked list where each node has a degree of 2 (except for the lowest and highest).
+// Could be
 template<>
 void Graph<netNode*>::adjCrit4() {
   vector<pair<netNode*, double>> avg_ratings;
+  unordered_map<netNode*, int> node_index;
 
   int numEdges = 0;
   cout << "Starting Adj Crit 4 ..." << endl;
@@ -346,47 +350,25 @@ void Graph<netNode*>::adjCrit4() {
 
 
 
-  for (auto n : this->nodes) {
+  for (int i = 0; i < this->nodes.size(); i++) {
     double total = 0;
     int counter = 0;
-    for (auto r =  (n->ratings).begin(); r != (n->ratings).end(); r++) {
+    node_index[nodes[i]] = i;
+    for (auto r =  (nodes[i]->ratings).begin(); r != (nodes[i]->ratings).end(); r++) {
       total += (r->second).first;
       counter++;
     }
-    avg_ratings.push_back(make_pair(n, total / counter));
+    avg_ratings.push_back(make_pair(nodes[i], total / counter));
   }
 
   sort(avg_ratings.begin(), avg_ratings.end(), avgRatingComparator());
 
   cout << "Calculated averages" << endl;
 
-  int span_floor = 0;
   for (int i = 1; i < avg_ratings.size(); i++) {
-    if (i%1000 == 0) cout << i << endl;
-    if (avg_ratings[i].second - avg_ratings[i-1].second > 0.0001) {
-      for (int j = span_floor; j < i; j++) {
-        for (int k = j+1; k < i; k++) {
-          this->add_edge(j, k);
-          numEdges++;
-        }
-      }
-      span_floor = i;
-    }
+    this->add_edge(node_index[nodes[i]], node_index[nodes[i-1]]);
   }
-
-  // for (int i = 0; i < this->nodes.size(); i++)
-  // {
-  //   if (i%1000 == 0) cout << i << endl;
-  //   for (int j = i + 1; j < this->nodes.size(); j++)
-  //   {
-  //     double diff = avg_ratings[nodes[i]] - avg_ratings[nodes[j]];
-  //     if (diff < 0.001 && diff > -0.001) {
-  //       this->add_edge(i, j);
-  //       numEdges++;
-  //     }
-  //   }
-  // }
-
+ 
   clock_t tot = clock() - start;
   cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
 }
