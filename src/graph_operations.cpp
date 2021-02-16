@@ -234,7 +234,7 @@ void Graph<netNode *>::adjCrit1()
 
   for (int i = 0; i < this->nodes.size(); i++)
   {
-    if (i%100 == 0) cout << i << endl;
+    if (i%1000 == 0) cout << i << endl;
     for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
     {
       if ((it->second).first > 3)
@@ -267,7 +267,7 @@ void Graph<netNode *>::adjCrit2()
 
   for (int i = 0; i < this->nodes.size(); i++)
   {
-    if (i%100 == 0) cout << i << endl;
+    if (i%1000 == 0) cout << i << endl;
 
     unordered_map<int, int> common; // map<node index, numMovies> to track number of movies in common that both dislike
     for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
@@ -290,7 +290,7 @@ void Graph<netNode *>::adjCrit2()
     }
   }
   clock_t tot = clock() - start;
-  cout << "Operation completed. Added " << numEdges << " in " << tot << endl;
+  cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
 }
 
 template <>
@@ -300,9 +300,12 @@ void Graph<netNode *>::adjCrit3()
   cout << "Starting Adj Crit 3 ..." << endl;
   cout << this->nodes.size() << endl;
 
+  clock_t start = clock();
+
+
   for (int i = 0; i < this->nodes.size(); i++)
   {
-    if (i%100 == 0) cout << i << endl;
+    if (i%1000 == 0) cout << i << endl;
 
     for (int j = i + 1; j < this->nodes.size(); j++)
     {
@@ -320,4 +323,8 @@ void Graph<netNode *>::adjCrit3()
       }
     }
   }
+
+  clock_t tot = clock() - start;
+  cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
+
 }

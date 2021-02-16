@@ -9,9 +9,15 @@ void graphOperationsMenu(Graph<netNode*>& graph) {
         cout << "Graph Operations" << endl;
 
         cout << "----------------" << endl;
-        cout << "[1] Connected Components" << endl;
+        cout << "[1] Run Connected Components" << endl;
+        cout << "[2] Print number of Components (must run [1] first)" << endl;
+        cout << "[3] Print component sizes (must run [1] first)" << endl;
         cout << "   [0] Dispose of graph, return to previous menu" << endl;
         cin >> option;
+
+        int numComponents = -1;
+        clock_t tot;
+        vector<int> componentSizes;
 
 
         switch (option) {
@@ -22,19 +28,33 @@ void graphOperationsMenu(Graph<netNode*>& graph) {
                 cout << "Running Connected Components... " << endl;
 
                 clock_t start = clock();
-                auto connComps = graph.connected_components();
-                clock_t tot = clock()-start;
+                auto c = graph.connected_components();
+                tot = clock()-start;
 
-                cout << "Finished in " << tot << "ms" << endl;
-                cout << "Number of Connected Components: " << connComps.size() << endl;
+                numComponents = c.size();
 
-                cout << "Component Sizes:" << endl;
-                for (auto v : connComps) {
-                    cout << "\t" << v.size() << endl;
+                for (auto e : c) {
+                    componentSizes.push_back(e.size());
                 }
+
+                cout << "Number of Connected Components: " << c.size() << endl;
+                cout << "Finished in " << tot << "ms" << endl;
+
+
             }
                 break;
-            
+            case 2:
+                cout << "Number of Connected Components: " << numComponents << endl;
+                break;
+            case 3:
+                cout << "Component Sizes:" << endl;
+                for (auto v : componentSizes) {
+                    cout << "\t" << v << endl;
+                }
+            case 4:
+                cout << "Execution Time" << endl;
+                cout << "Connected Components Finished in " << tot << "ms" << endl;
+
 
             default:
                 cout << "Please enter a valid option" << endl;

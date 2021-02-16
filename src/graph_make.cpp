@@ -21,7 +21,7 @@ Graph<netNode *> buildGraph(vector<string> filenames)
             if (line.find(':') < line.length())
             {
                 movie = stoi(line);
-                if (movie%1000 == 0) cout << movie << endl;
+                if (movie%1000 == 0) cout << "Movie:\t" << movie << endl;
             }
             else
             {
