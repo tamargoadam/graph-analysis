@@ -328,3 +328,44 @@ void Graph<netNode *>::adjCrit3()
   cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
 
 }
+
+template<>
+
+void Graph<netNode*>::adjCrit4() {
+  unordered_map<netNode*, double> avg_ratings;
+
+  int numEdges = 0;
+  cout << "Starting Adj Crit 4 ..." << endl;
+  cout << this->nodes.size() << endl;
+
+  clock_t start = clock();
+
+
+
+  for (auto n : this->nodes) {
+    double total = 0;
+    int counter = 0;
+    for (auto r =  (n->ratings).begin(); r != (n->ratings).end(); r++) {
+      total += (r->second).first;
+      counter++;
+    }
+    avg_ratings[n] = total / counter;
+  }
+  cout << "Calculated averages" << endl;
+
+  for (int i = 0; i < this->nodes.size(); i++)
+  {
+    if (i%1000 == 0) cout << i << endl;
+    for (int j = i + 1; j < this->nodes.size(); j++)
+    {
+      double diff = avg_ratings[nodes[i]] - avg_ratings[nodes[j]];
+      if (diff < 0.001 && diff > -0.001) {
+        this->add_edge(i, j);
+        numEdges++;
+      }
+    }
+  }
+
+  clock_t tot = clock() - start;
+  cout << "Operation completed. Added " << numEdges << " edges in " << tot << endl;
+}

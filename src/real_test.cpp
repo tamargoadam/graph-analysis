@@ -71,6 +71,7 @@ void buildGraphMenu(Graph<netNode*>& graph) {
         cout << "[1] Adjacency Criteria 1 - \"A Mutual Interest\" - Each person rated the same movie" << endl;
         cout << "[2] Adjacency Criteria 2 - \"Hater's Club\" - Both people have given a 2 star rating or lower on the same movie for at least 3 movies" << endl; 
         cout << "[3] Adjacency Criteria 3 - \"Trending\" - Both rated the same movie on the same day" << endl;
+        cout << "[4] Adjacency Criteria 4 - \"Great Minds\" - Ratings within 0.001 of each other" << endl;
         cout << "   [0] Quit" << endl;
         cin >> option;
 
@@ -84,10 +85,13 @@ void buildGraphMenu(Graph<netNode*>& graph) {
             case 2: 
                 graph.adjCrit2();
                 graphOperationsMenu(graph);
-
                 break;
             case 3:
                 graph.adjCrit3();
+                graphOperationsMenu(graph);
+                break;
+            case 4:
+                graph.adjCrit4();
                 graphOperationsMenu(graph);
                 break;
             default:

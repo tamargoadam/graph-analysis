@@ -32,6 +32,7 @@ class Graph {
     void adjCrit1();
     void adjCrit2();
     void adjCrit3();
+    void adjCrit4();
 
   private:
     std::vector<std::vector<int>> adj_list;
