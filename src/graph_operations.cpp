@@ -267,6 +267,8 @@ void Graph<netNode *>::adjCrit2()
 
   for (int i = 0; i < this->nodes.size(); i++)
   {
+    if (i%100 == 0) cout << i << endl;
+
     unordered_map<int, int> common; // map<node index, numMovies> to track number of movies in common that both dislike
     for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
     {
@@ -294,8 +296,14 @@ void Graph<netNode *>::adjCrit2()
 template <>
 void Graph<netNode *>::adjCrit3()
 {
+  int numEdges = 0;
+  cout << "Starting Adj Crit 3 ..." << endl;
+  cout << this->nodes.size() << endl;
+
   for (int i = 0; i < this->nodes.size(); i++)
   {
+    if (i%100 == 0) cout << i << endl;
+
     for (int j = i + 1; j < this->nodes.size(); j++)
     {
       for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
@@ -306,6 +314,7 @@ void Graph<netNode *>::adjCrit3()
           if ((f->second).second == (it->second).second)
           {
             this->add_edge(i, j);
+            numEdges++;
           }
         }
       }
