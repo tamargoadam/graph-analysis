@@ -228,45 +228,51 @@ void Graph<T>::adjCrit3()
   cout << "Function only intended for graphs of type netNode*" << endl;
 }
 
-// Adds an edge between any two nodes that share a movie
+
+// RESULTS IN SEGFAULT, DO NOT USE
+// // Adds an edge between any two nodes that have watched the same number of movies
+// template <>
+// void Graph<netNode *>::adjCrit1()
+// {
+//   int numEdges = 0;
+//   cout << "Starting Adj Crit 1 ..." << endl;
+//   cout << this->nodes.size() << endl;
+//   clock_t start = clock();
+
+//   unordered_map<int, int> numMovies;
+
+//   for (int a = 0; a < this->nodes.size(); a++) {
+//     numMovies[a] = nodes[a]->ratings.size();
+//   }
+
+//   for (int i = 0; i < this->nodes.size(); i++)
+//   {
+//     if (i % 1000 == 0)
+//       cout << i << endl;
+//     for (int j = i + 1; j < this->nodes.size(); j++)
+//     {
+
+//       if (numMovies[i] == numMovies[j])
+//       {
+//         this->add_edge(i, j);
+//         numEdges++;
+//       }
+//     }
+    
+//   }
+//   clock_t tot = clock() - start;
+//   cout << "Operation completed. Added " << numEdges << " edges in " << tot << " ms" << endl;
+// }
+
+//
+
+// Builds edge between any two nodes that have both given a 1 star to at least 3 shared movies
+ 
 template <>
 void Graph<netNode *>::adjCrit1()
 {
   int numEdges = 0;
   cout << "Starting Adj Crit 1 ..." << endl;
-  cout << this->nodes.size() << endl;
-  clock_t start = clock();
-
-  for (int i = 0; i < this->nodes.size(); i++)
-  {
-    if (i % 1000 == 0)
-      cout << i << endl;
-    for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
-    {
-      if ((it->second).first > 3)
-      {
-        for (int j = i + 1; j < this->nodes.size(); j++)
-        {
-
-          if (nodes[j]->ratings.find(it->first) != nodes[j]->ratings.end())
-          {
-            this->add_edge(i, j);
-            numEdges++;
-          }
-        }
-      }
-    }
-  }
-  clock_t tot = clock() - start;
-  cout << "Operation completed. Added " << numEdges << " edges in " << tot << " ms" << endl;
-}
-
-//
-template <>
-void Graph<netNode *>::adjCrit2()
-{
-  int numEdges = 0;
-  cout << "Starting Adj Crit 2 ..." << endl;
   cout << this->nodes.size() << endl;
 
   clock_t start = clock();
@@ -289,8 +295,10 @@ void Graph<netNode *>::adjCrit2()
             {
 
               common[j]++;
-              if (common[j] == 3)
+              if (common[j] == 3) {
                 add_edge(i, j);
+                numEdges++;
+              }
             }
           }
         }
@@ -302,10 +310,10 @@ void Graph<netNode *>::adjCrit2()
 }
 
 template <>
-void Graph<netNode *>::adjCrit3()
+void Graph<netNode *>::adjCrit2()
 {
   int numEdges = 0;
-  cout << "Starting Adj Crit 3 ..." << endl;
+  cout << "Starting Adj Crit 2 ..." << endl;
   cout << this->nodes.size() << endl;
 
   clock_t start = clock();
@@ -315,11 +323,12 @@ void Graph<netNode *>::adjCrit3()
     if (i % 1000 == 0)
       cout << i << endl;
 
-    for (int j = i + 1; j < this->nodes.size(); j++)
+    
+    for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
     {
-      for (auto it = nodes[i]->ratings.begin(); it != nodes[i]->ratings.end(); it++)
+      if ((it->second).first == 5)
       {
-        if ((it->second).first == 5)
+        for (int j = i + 1; j < this->nodes.size(); j++)
         {
           auto f = nodes[j]->ratings.find(it->first);
           if (f != nodes[j]->ratings.end())
@@ -350,13 +359,13 @@ bool avgRatingComparator::operator()(const pair<netNode *, double> &l, const pai
 // Sort nodes by their average movie rating. Essentially creates a doubly linked list where each node has a degree of 2 (except for the lowest and highest).
 // Could be
 template <>
-void Graph<netNode *>::adjCrit4()
+void Graph<netNode *>::adjCrit3()
 {
   vector<pair<netNode *, double>> avg_ratings;
   unordered_map<netNode *, int> node_index;
 
   int numEdges = 0;
-  cout << "Starting Adj Crit 4 ..." << endl;
+  cout << "Starting Adj Crit 3 ..." << endl;
   cout << this->nodes.size() << endl;
 
   clock_t start = clock();
@@ -381,6 +390,7 @@ void Graph<netNode *>::adjCrit4()
   for (int i = 1; i < avg_ratings.size(); i++)
   {
     this->add_edge(node_index[nodes[i]], node_index[nodes[i - 1]]);
+    numEdges++;
   }
 
   clock_t tot = clock() - start;

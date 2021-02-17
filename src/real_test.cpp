@@ -87,10 +87,9 @@ void buildGraphMenu(Graph<netNode*>& graph) {
     while (option != 0) {
 
         cout << "----------------" << endl;
-        cout << "[1] Adjacency Criteria 1 - \"A Mutual Interest\" - Each person rated the same movie" << endl;
-        cout << "[2] Adjacency Criteria 2 - \"Hater's Club\" - Both people have given a 2 star rating or lower on the same movie for at least 3 movies" << endl; 
-        cout << "[3] Adjacency Criteria 3 - \"Trending\" - Both rated the same movie 5 stars on the same day" << endl;
-        cout << "[4] Adjacency Criteria 4 - \"Great Minds\" - Sort users by average rating, connect in order to form a Doubly-Linked-List in order. " << endl;
+        cout << "[1] Adjacency Criteria 1 - \"Hater's Club\" - Both people have given a 1 star rating on the same movie for at least 3 movies" << endl; 
+        cout << "[2] Adjacency Criteria 2 - \"Trending\" - Both rated the same movie 5 stars on the same day" << endl;
+        cout << "[3] Adjacency Criteria 3 - \"Great Minds\" - Sort users by average rating, connect in order to form a Doubly-Linked-List in order. " << endl;
         cout << "   [0] Quit" << endl;
         cin >> option;
 
@@ -107,10 +106,6 @@ void buildGraphMenu(Graph<netNode*>& graph) {
                 break;
             case 3:
                 graph.adjCrit3();
-                graphOperationsMenu(graph);
-                break;
-            case 4:
-                graph.adjCrit4();
                 graphOperationsMenu(graph);
                 break;
             default:
