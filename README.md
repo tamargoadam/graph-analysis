@@ -1,7 +1,7 @@
-# graph-analysis
+# Graph Analysis
 
 ## Usage
-To build the program, move into the `src` folder and run `make`. This will build two applications; *real_test* and *simulated_test*. To test for memory usage, use `env test ./simulated_test` or `env test real_test <filename>`.
+To build the program, move into the `src` folder and run `make`. This will build two applications: *real_test* and *simulated_test*. To test for memory usage, use `env test ./simulated_test` or `env test real_test <filename>`.
 
 `./simulated_test` allows the user to run the simulated tests as described below.
 
